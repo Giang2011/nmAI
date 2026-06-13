@@ -172,11 +172,8 @@ def main():
         # Chuyển text sang vector đếm từ theo vocabulary train
         vector = text_to_vector(email_text, vocab_index, n_features)
 
-        # Nếu toàn bộ từ đều không nằm trong vocab thì không thể dự đoán đáng tin
-        if np.sum(vector) == 0:
-            result_var.set("Không tìm thấy từ nào trong vocabulary train. Không thể dự đoán.")
-            return
-
+        # Dù không có từ nào khớp vocabulary thì vẫn chạy Naive Bayes.
+        # Khi vector toàn 0, kết quả sẽ phụ thuộc vào prior spam/ham.
         prob_spam, prob_ham = model.predict_proba_one(vector)
         pred = 1 if prob_spam > prob_ham else 0
 
